@@ -18,7 +18,11 @@ public class Modulo {
     private String habilidadesTrabalhadas;
     private String tarefaValidacao;
 
-    public Modulo(Trilha trilha, String nome, StatusModuloEnum statusModulo, int prazoLimiteDias, String habilidadesTrabalhadas, String tarefaValidacao) {
+    public Modulo(Trilha trilha, String nome, StatusModuloEnum statusModulo, int prazoLimiteDias, String habilidadesTrabalhadas,
+                  String tarefaValidacao, Usuario usuario) throws PermissaoException {
+        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.ADMINISTRADOR)) {
+            throw new PermissaoException("Usuário não tem permissão para criar módulos");
+        }
         this.trilha = trilha;
         this.nome = nome;
         this.statusModulo = statusModulo;
@@ -30,6 +34,7 @@ public class Modulo {
         }
         this.habilidadesTrabalhadas = habilidadesTrabalhadas;
         this.tarefaValidacao = tarefaValidacao;
+        this.trilha.addModulo(this);
     }
 
     public void alterarStatusModulo(StatusModuloEnum statusModulo, Usuario usuario) throws PermissaoException {
@@ -53,5 +58,9 @@ public class Modulo {
 
     public Trilha getTrilha() {
         return trilha;
+    }
+
+    public boolean isPossivelAvaliar() {
+        return this.statusModulo == StatusModuloEnum.EM_FASE_DE_AVALIACAO && this.dataFinalizacao.isAfter(OffsetDateTime.now());
     }
 }

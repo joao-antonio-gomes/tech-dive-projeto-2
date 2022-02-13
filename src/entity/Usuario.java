@@ -24,6 +24,15 @@ public class Usuario {
     }
 
     public boolean isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum perfilDeAcesso) {
-        return this.perfilDeAcesso.contains(perfilDeAcesso);
+        boolean bool = false;
+
+        for (PerfilDeAcessoEnum perfil : this.perfilDeAcesso) {
+            if (perfil.getCodigo() >= perfilDeAcesso.getCodigo()) {
+                bool = true;
+                break;
+            }
+        }
+
+        return bool;
     }
 }

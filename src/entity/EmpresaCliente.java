@@ -1,9 +1,14 @@
 package entity;
 
+import enums.PerfilDeAcessoEnum;
 import enums.RegionalSenaiEnum;
 import enums.SegmentoEmpresaEnum;
 import exception.DocumentoException;
+import exception.PermissaoException;
 import utils.Validadores;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmpresaCliente {
     private Long id;
@@ -15,8 +20,13 @@ public class EmpresaCliente {
     private RegionalSenaiEnum regionalSenai;
     private boolean isMatriz;
     private String nomeFilial;
+    private List<Trilha> trilhas = new ArrayList<>();
 
-    public EmpresaCliente(String razaoSocial, String cnpj, String cidade, String estado, SegmentoEmpresaEnum segmentoEmpresa, RegionalSenaiEnum regionalSenai) throws DocumentoException {
+    public EmpresaCliente(String razaoSocial, String cnpj, String cidade, String estado, SegmentoEmpresaEnum segmentoEmpresa,
+                          RegionalSenaiEnum regionalSenai, Usuario usuario) throws Exception {
+        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.ADMINISTRADOR)) {
+            throw new PermissaoException("Usuário não tem permissão para criar empresa");
+        }
         this.razaoSocial = razaoSocial;
         this.cnpj = Validadores.validaCnpj(cnpj);
         this.cidade = cidade;
@@ -26,7 +36,11 @@ public class EmpresaCliente {
         this.isMatriz = true;
     }
 
-    public EmpresaCliente(String razaoSocial, String cnpj, String cidade, String estado, SegmentoEmpresaEnum segmentoEmpresa, RegionalSenaiEnum regionalSenai, String nomeFilial) throws DocumentoException {
+    public EmpresaCliente(String razaoSocial, String cnpj, String cidade, String estado, SegmentoEmpresaEnum segmentoEmpresa,
+                          RegionalSenaiEnum regionalSenai, String nomeFilial, Usuario usuario) throws Exception {
+        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.ADMINISTRADOR)) {
+            throw new PermissaoException("Usuário não tem permissão para criar empresa");
+        }
         this.razaoSocial = razaoSocial;
         this.cnpj = Validadores.validaCnpj(cnpj);
         this.cidade = cidade;
@@ -42,5 +56,9 @@ public class EmpresaCliente {
             return razaoSocial + " - " + nomeFilial;
         }
         return this.razaoSocial;
+    }
+
+    public void addTrilha(Trilha trilha) {
+        this.trilhas.add(trilha);
     }
 }

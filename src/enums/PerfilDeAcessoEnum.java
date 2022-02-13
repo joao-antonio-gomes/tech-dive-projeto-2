@@ -12,4 +12,8 @@ public enum PerfilDeAcessoEnum {
         this.codigo = codigo;
         this.descricao = descricao;
     }
+
+    public int getCodigo() {
+        return codigo;
+    }
 }
