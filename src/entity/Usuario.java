@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
-    private Long id;
+    private static int numeroUsuarios = 0;
+    private int id;
     private String nome;
     private String cpf;
     private String email;
@@ -16,6 +17,7 @@ public class Usuario {
     private List<PerfilDeAcessoEnum> perfilDeAcesso = new ArrayList<>();
 
     public Usuario(String nome, String cpf, String email, String senha, ArrayList<PerfilDeAcessoEnum> perfilDeAcesso) throws DocumentoException {
+        this.id = numeroUsuarios++;
         this.nome = nome;
         this.cpf = Validadores.validaCpf(cpf);
         this.email = Validadores.validaEmail(email);

@@ -1,8 +1,7 @@
 package entity;
 
+import db.DatabaseTrilha;
 import enums.NotasEnum;
-import enums.PerfilDeAcessoEnum;
-import exception.PermissaoException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,7 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Trilha {
-    private Long id;
+    private static int numeroTrilhas = 0;
+    private int id;
     private int numeroSequencialTrilha;
     private String nomeTrilha;
     private String apelidoTrilha;
@@ -21,20 +21,14 @@ public class Trilha {
     private String ano = String.valueOf(LocalDate.now().getYear());
     private List<Modulo> modulos = new ArrayList<>();
 
-    public Trilha(EmpresaCliente empresaCliente, String ocupacao, Usuario usuario) throws PermissaoException {
-        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.ADMINISTRADOR)) {
-            throw new PermissaoException("Usuário não tem permissão para criar trilha");
-        }
+    public Trilha(EmpresaCliente empresaCliente, String ocupacao) {
+        this.id = ++numeroTrilhas;
         this.empresaCliente = empresaCliente;
         this.ocupacao = ocupacao;
         this.numeroSequencialTrilha = this.getProximoNumeroSequencialTrilhaByOcupacao(this.ocupacao);
         this.nomeTrilha = this.formataNomeTrilha();
         this.apelidoTrilha = this.formataApelidoTrilha();
-        this.empresaCliente.addTrilha(this);
-    }
-
-    public Trilha(Long id) {
-        this.id = id;
+        DatabaseTrilha.addTrilha(this);
     }
 
     private String formataApelidoTrilha() {
@@ -46,15 +40,34 @@ public class Trilha {
     }
 
     private int getProximoNumeroSequencialTrilhaByOcupacao(String ocupacao) {
-        //TODO Para ser feito precisa de conexão ao banco de dados
-        return 0;
+        List<Trilha> trilhas = DatabaseTrilha.getTrilhas();
+        trilhas = trilhas.stream().filter(trilha -> trilha.getOcupacao().equals(ocupacao) && trilha.getEmpresaCliente().equals(this.empresaCliente))
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        return trilhas.size() == 0 ? 1 : trilhas.size() + 1;
     }
 
-    public void setAnotacoes(String anotacoes, Usuario usuario) throws PermissaoException {
-        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.OPERACIONAL)) {
-            throw new PermissaoException("Usuário não tem permissão para alterar anotações");
-        }
+    public void setAnotacoes(String anotacoes) {
         this.anotacoes = anotacoes;
+    }
+
+    public void setNotaSatisfacaoGeral(NotasEnum notaSatisfacaoGeral) {
+        this.notaSatisfacaoGeral = notaSatisfacaoGeral;
+    }
+
+    public void addModulo(Modulo modulo) {
+        this.modulos.add(modulo);
+    }
+
+    public String getOcupacao() {
+        return ocupacao;
+    }
+
+    public EmpresaCliente getEmpresaCliente() {
+        return empresaCliente;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override
@@ -62,22 +75,15 @@ public class Trilha {
         if (this == o) return true;
         if (!(o instanceof Trilha)) return false;
         Trilha trilha = (Trilha) o;
-        return Objects.equals(id, trilha.id);
+        return getId() == trilha.getId();
+    }
+
+    public List<Modulo> getModulos() {
+        return modulos;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public void setNotaSatisfacaoGeral(NotasEnum notaSatisfacaoGeral, Usuario usuario) throws PermissaoException {
-        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.OPERACIONAL)) {
-            throw new PermissaoException("Usuário não tem permissão para alterar satisfação");
-        }
-        this.notaSatisfacaoGeral = notaSatisfacaoGeral;
-    }
-
-    public void addModulo(Modulo modulo) {
-        this.modulos.add(modulo);
+        return Objects.hash(getId());
     }
 }

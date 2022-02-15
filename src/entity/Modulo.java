@@ -1,13 +1,16 @@
 package entity;
 
-import enums.PerfilDeAcessoEnum;
+import db.DatabaseModulo;
+import db.DatabaseTrilha;
 import enums.StatusModuloEnum;
-import exception.PermissaoException;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Modulo {
-    private Long id;
+    private static int numeroModulos = 0;
+    private int id;
     private Trilha trilha;
     private int numeroSequencialModulo;
     private String nome;
@@ -19,11 +22,10 @@ public class Modulo {
     private String tarefaValidacao;
 
     public Modulo(Trilha trilha, String nome, StatusModuloEnum statusModulo, int prazoLimiteDias, String habilidadesTrabalhadas,
-                  String tarefaValidacao, Usuario usuario) throws PermissaoException {
-        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.ADMINISTRADOR)) {
-            throw new PermissaoException("Usuário não tem permissão para criar módulos");
-        }
+                  String tarefaValidacao) {
+        this.id = ++numeroModulos;
         this.trilha = trilha;
+        this.numeroSequencialModulo = getProximoNumeroSequencialTrilhaByModulo();
         this.nome = nome;
         this.statusModulo = statusModulo;
         if (prazoLimiteDias > 0) {
@@ -35,12 +37,10 @@ public class Modulo {
         this.habilidadesTrabalhadas = habilidadesTrabalhadas;
         this.tarefaValidacao = tarefaValidacao;
         this.trilha.addModulo(this);
+        DatabaseModulo.addModulo(this);
     }
 
-    public void alterarStatusModulo(StatusModuloEnum statusModulo, Usuario usuario) throws PermissaoException {
-        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.ADMINISTRADOR)) {
-            throw new PermissaoException("Usuário não tem permissão para alterar anotações");
-        }
+    public void alterarStatusModulo(StatusModuloEnum statusModulo) {
 
         switch (statusModulo) {
             case CURSO_EM_ANDAMENTO:
@@ -54,6 +54,20 @@ public class Modulo {
                 this.dataFinalizacao = OffsetDateTime.now();
                 break;
         }
+    }
+
+    private int getProximoNumeroSequencialTrilhaByModulo() {
+        List<Trilha> trilhas = DatabaseTrilha.getTrilhas();
+        trilhas = trilhas.stream()
+                .filter(trilha -> trilha.equals(this.trilha)).collect(Collectors.toList());
+        if (trilhas.size() > 0) {
+            return trilhas.get(0).getModulos().size() + 1;
+        }
+        return 1;
+    }
+
+    private int getNumeroSequencialModulo() {
+        return numeroSequencialModulo;
     }
 
     public Trilha getTrilha() {

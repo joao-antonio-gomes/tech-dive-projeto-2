@@ -1,10 +1,12 @@
 package entity;
 
+import db.DatabaseAvaliacao;
 import enums.NotasEnum;
 import exception.AvaliacaoException;
 
 public class Avaliacao {
-    private Long id;
+    private static int numeroAvaliacoes = 0;
+    private int id;
     private NotasEnum nota;
     private String anotacao;
     private boolean isTarefaRealizada;
@@ -20,6 +22,6 @@ public class Avaliacao {
         this.isTarefaRealizada = isTarefaRealizada;
         this.modulo = modulo;
         this.trabalhador = trabalhador;
-        this.trabalhador.addAvaliacao(this);
+        DatabaseAvaliacao.addAvaliacao(this);
     }
 }

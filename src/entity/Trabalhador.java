@@ -1,16 +1,15 @@
 package entity;
 
-import enums.PerfilDeAcessoEnum;
-import exception.DocumentoException;
+import db.DatabaseTrabalhador;
 import utils.Validadores;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class Trabalhador {
-    private Long id;
+    private static int numeroTrabalhadores = 0;
+    private int id;
     private String nome;
     private String cpf;
     private EmpresaCliente empresaCliente;
@@ -20,17 +19,15 @@ public class Trabalhador {
     private List<Modulo> modulos = new ArrayList<>();
     private List<Avaliacao> avaliacoes = new ArrayList<>();
 
-    public Trabalhador(String nome, String cpf, EmpresaCliente empresaCliente, String setor, String funcao, List<Modulo> modulos,
-                       Usuario usuario) throws Exception {
-        if (!usuario.isUsuarioComPerfilDeAcesso(PerfilDeAcessoEnum.RH)) {
-            throw new Exception("Usuário não tem perfil de acesso para criar um trabalhador");
-        }
+    public Trabalhador(String nome, String cpf, EmpresaCliente empresaCliente, String setor, String funcao, List<Modulo> modulos) throws Exception {
+        this.id = numeroTrabalhadores++;
         this.nome = nome;
         this.cpf = Validadores.validaCpf(cpf);
         this.empresaCliente = empresaCliente;
         this.setor = setor;
         this.funcao = funcao;
         this.modulos = modulos;
+        DatabaseTrabalhador.addTrabalhador(this);
     }
 
     public List<Trilha> getTrilhas() {
