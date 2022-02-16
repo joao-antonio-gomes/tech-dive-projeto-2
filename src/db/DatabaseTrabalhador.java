@@ -44,4 +44,14 @@ public class DatabaseTrabalhador {
         }
         return trabalhadoresByTrilhaId;
     }
+
+    public static List<Trabalhador> getTrabalhadoresByModuloId(int id) {
+        List<Trabalhador> trabalhadoresByTrilhaId = new ArrayList<>();
+        for(Trabalhador trabalhador : trabalhadores) {
+            if(trabalhador.getModulosId().contains(id)) {
+                trabalhadoresByTrilhaId.add(trabalhador);
+            }
+        }
+        return trabalhadoresByTrilhaId;
+    }
 }

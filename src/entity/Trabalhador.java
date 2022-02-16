@@ -73,4 +73,12 @@ public class Trabalhador {
         }
         return trilhasId;
     }
+
+    public List<Integer> getModulosId() {
+        List<Integer> modulosId = new ArrayList<>();
+        for (Modulo modulo : this.getModulosInscrito()) {
+            modulosId.add(modulo.getId());
+        }
+        return modulosId;
+    }
 }
