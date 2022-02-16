@@ -15,4 +15,13 @@ public class DatabaseTrilha {
     public static void addTrilha(Trilha trilha){
         trilhas.add(trilha);
     }
+
+    public static Trilha getTrilhaByEmpresaId(int idEmpresa) {
+        for(Trilha trilha : trilhas){
+            if(trilha.getEmpresaId() == idEmpresa){
+                return trilha;
+            }
+        }
+        return null;
+    }
 }

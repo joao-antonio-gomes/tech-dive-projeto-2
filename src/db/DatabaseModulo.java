@@ -15,4 +15,24 @@ public class DatabaseModulo {
     public static void addModulo(Modulo modulo){
         modulos.add(modulo);
     }
+
+    public static List<Modulo> getModulosByIdTrilha(int idTrilha){
+        List<Modulo> modulosByIdTrilha = new ArrayList<>();
+        for (Modulo modulo : modulos) {
+            if (modulo.getTrilhaId() == idTrilha) {
+                modulosByIdTrilha.add(modulo);
+            }
+        }
+        return modulosByIdTrilha;
+    }
+
+    public static List<Modulo> getModulosByIdEmpresa(int idEmpresa) {
+        List<Modulo> modulosByIdEmpresa = new ArrayList<>();
+        for (Modulo modulo : modulos) {
+            if (modulo.getTrilhaEmpresaId() == idEmpresa) {
+                modulosByIdEmpresa.add(modulo);
+            }
+        }
+        return modulosByIdEmpresa;
+    }
 }

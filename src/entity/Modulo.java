@@ -25,7 +25,7 @@ public class Modulo {
                   String tarefaValidacao) {
         this.id = ++numeroModulos;
         this.trilha = trilha;
-        this.numeroSequencialModulo = getProximoNumeroSequencialTrilhaByModulo();
+        this.numeroSequencialModulo = getProximoNumeroSequencialModuloByTrilha();
         this.nome = nome;
         this.statusModulo = statusModulo;
         if (prazoLimiteDias > 0) {
@@ -36,7 +36,6 @@ public class Modulo {
         }
         this.habilidadesTrabalhadas = habilidadesTrabalhadas;
         this.tarefaValidacao = tarefaValidacao;
-        this.trilha.addModulo(this);
         DatabaseModulo.addModulo(this);
     }
 
@@ -56,14 +55,12 @@ public class Modulo {
         }
     }
 
-    private int getProximoNumeroSequencialTrilhaByModulo() {
-        List<Trilha> trilhas = DatabaseTrilha.getTrilhas();
-        trilhas = trilhas.stream()
-                .filter(trilha -> trilha.equals(this.trilha)).collect(Collectors.toList());
-        if (trilhas.size() > 0) {
-            return trilhas.get(0).getModulos().size() + 1;
+    private int getProximoNumeroSequencialModuloByTrilha() {
+        List<Modulo> modulosByIdTrilha = DatabaseModulo.getModulosByIdTrilha(this.trilha.getId());
+        if (modulosByIdTrilha.isEmpty()) {
+            return 1;
         }
-        return 1;
+        return modulosByIdTrilha.stream().map(Modulo::getNumeroSequencialModulo).max(Integer::compareTo).get() + 1;
     }
 
     private int getNumeroSequencialModulo() {
@@ -76,5 +73,17 @@ public class Modulo {
 
     public boolean isPossivelAvaliar() {
         return this.statusModulo == StatusModuloEnum.EM_FASE_DE_AVALIACAO && this.dataFinalizacao.isAfter(OffsetDateTime.now());
+    }
+
+    public int getTrilhaId() {
+        return trilha.getId();
+    }
+
+    public int getTrilhaEmpresaId() {
+        return trilha.getEmpresaId();
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -20,7 +20,6 @@ public class EmpresaCliente {
     private RegionalSenaiEnum regionalSenai;
     private boolean isMatriz;
     private String nomeFilial;
-    private List<Trilha> trilhas = new ArrayList<>();
 
     public EmpresaCliente(String razaoSocial, String cnpj, String cidade, String estado, SegmentoEmpresaEnum segmentoEmpresa,
                           RegionalSenaiEnum regionalSenai) throws Exception {
@@ -56,10 +55,6 @@ public class EmpresaCliente {
         return this.razaoSocial;
     }
 
-    public void addTrilha(Trilha trilha) {
-        this.trilhas.add(trilha);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,5 +66,9 @@ public class EmpresaCliente {
     @Override
     public int hashCode() {
         return Objects.hash(id, cnpj);
+    }
+
+    public int getId() {
+        return id;
     }
 }

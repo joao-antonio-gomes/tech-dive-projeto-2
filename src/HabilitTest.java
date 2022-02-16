@@ -4,6 +4,7 @@ import db.DatabaseTrabalhador;
 import db.DatabaseTrilha;
 import entity.EmpresaCliente;
 import entity.Modulo;
+import entity.Trabalhador;
 import entity.Trilha;
 import enums.RegionalSenaiEnum;
 import enums.SegmentoEmpresaEnum;
@@ -25,7 +26,13 @@ public class HabilitTest {
         Modulo modulol2Trilha1 = new Modulo(trilhaEmpresaJoaoJava, "SQL", StatusModuloEnum.CURSO_NAO_INICIADO, 0, "Banco de Dados",
                 "Saber definir DDL e DML");
 
-        DatabaseTrilha.getTrilhas();
-        DatabaseModulo.getModulos();
+        Trabalhador trabalhadorJoao = new Trabalhador("Joao", "09355872925", empresaJoao, "Desenvolvimento", "Desenvolvedor");
+        Trabalhador trabalhadorMaria = new Trabalhador("Maria", "09355872925", empresaJoao, "Desenvolvimento", "Desenvolvedor");
+        Trabalhador trabalhadorFernanda = new Trabalhador("Fernanda", "09355872925", empresaJoao, "Desenvolvimento", "Desenvolvedor");
+        trabalhadorJoao.addTrilha(trilhaEmpresaJoaoJava);
+        trabalhadorMaria.addTrilha(trilhaEmpresaJoaoJava);
+        trabalhadorJoao.addTrilha(trilhaEmpresaJoaoJavascript);
+
+        DatabaseTrabalhador.getTrabalhadoresByTrilhaId(trilhaEmpresaJoaoJava.getId());
     }
 }

@@ -24,4 +24,16 @@ public class Avaliacao {
         this.trabalhador = trabalhador;
         DatabaseAvaliacao.addAvaliacao(this);
     }
+
+    public int getTrabalhadorId() {
+        return this.trabalhador.getId();
+    }
+
+    public int getModuloId() {
+        return this.modulo.getId();
+    }
+
+    public int getTrilhaId() {
+        return this.modulo.getTrilha().getId();
+    }
 }

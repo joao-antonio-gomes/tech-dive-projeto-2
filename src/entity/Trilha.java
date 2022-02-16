@@ -19,7 +19,6 @@ public class Trilha {
     private NotasEnum notaSatisfacaoGeral;
     private String anotacoes;
     private String ano = String.valueOf(LocalDate.now().getYear());
-    private List<Modulo> modulos = new ArrayList<>();
 
     public Trilha(EmpresaCliente empresaCliente, String ocupacao) {
         this.id = ++numeroTrilhas;
@@ -41,7 +40,9 @@ public class Trilha {
 
     private int getProximoNumeroSequencialTrilhaByOcupacao(String ocupacao) {
         List<Trilha> trilhas = DatabaseTrilha.getTrilhas();
-        trilhas = trilhas.stream().filter(trilha -> trilha.getOcupacao().equals(ocupacao) && trilha.getEmpresaCliente().equals(this.empresaCliente))
+        trilhas = trilhas.stream().filter(trilha -> trilha.getOcupacao()
+                        .equals(ocupacao) && trilha.getEmpresaCliente()
+                        .equals(this.empresaCliente))
                 .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         return trilhas.size() == 0 ? 1 : trilhas.size() + 1;
     }
@@ -54,16 +55,16 @@ public class Trilha {
         this.notaSatisfacaoGeral = notaSatisfacaoGeral;
     }
 
-    public void addModulo(Modulo modulo) {
-        this.modulos.add(modulo);
-    }
-
     public String getOcupacao() {
         return ocupacao;
     }
 
     public EmpresaCliente getEmpresaCliente() {
         return empresaCliente;
+    }
+
+    public int getEmpresaId() {
+        return this.empresaCliente.getId();
     }
 
     public int getId() {
@@ -76,10 +77,6 @@ public class Trilha {
         if (!(o instanceof Trilha)) return false;
         Trilha trilha = (Trilha) o;
         return getId() == trilha.getId();
-    }
-
-    public List<Modulo> getModulos() {
-        return modulos;
     }
 
     @Override
