@@ -39,11 +39,10 @@ public class Trilha {
     }
 
     private int getProximoNumeroSequencialTrilhaByOcupacao(String ocupacao) {
-        List<Trilha> trilhas = DatabaseTrilha.getTrilhas();
+        List<Trilha> trilhas = DatabaseTrilha.getTrilhasByEmpresaId(this.empresaCliente.getId());
         trilhas = trilhas.stream().filter(trilha -> trilha.getOcupacao()
-                        .equals(ocupacao) && trilha.getEmpresaCliente()
-                        .equals(this.empresaCliente))
-                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+                        .equals(ocupacao))
+                        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         return trilhas.size() == 0 ? 1 : trilhas.size() + 1;
     }
 

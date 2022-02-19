@@ -16,12 +16,13 @@ public class DatabaseTrilha {
         trilhas.add(trilha);
     }
 
-    public static Trilha getTrilhaByEmpresaId(int idEmpresa) {
+    public static List<Trilha> getTrilhasByEmpresaId(int idEmpresa) {
+        List<Trilha> trilhas = new ArrayList<>();
         for(Trilha trilha : trilhas){
             if(trilha.getEmpresaId() == idEmpresa){
-                return trilha;
+                trilhas.add(trilha);
             }
         }
-        return null;
+        return trilhas;
     }
 }

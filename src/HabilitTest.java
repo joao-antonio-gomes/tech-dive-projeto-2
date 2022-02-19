@@ -10,6 +10,8 @@ import enums.RegionalSenaiEnum;
 import enums.SegmentoEmpresaEnum;
 import enums.StatusModuloEnum;
 
+import java.time.OffsetDateTime;
+
 public class HabilitTest {
     public static void main(String[] args) throws Exception {
         EmpresaCliente empresaJoao = new EmpresaCliente("Joao Antonio Gomes ME", "05.555.382/0001-33", "São José", "Santa Catarina", SegmentoEmpresaEnum.ALIMENTOS_E_BEBIDAS,
@@ -34,5 +36,14 @@ public class HabilitTest {
         trabalhadorJoao.addTrilha(trilhaEmpresaJoaoJavascript);
 
         DatabaseTrabalhador.getTrabalhadoresByTrilhaId(trilhaEmpresaJoaoJava.getId());
+
+        int dias = 7;
+        OffsetDateTime dataHoje = OffsetDateTime.now();
+        while (dias > 0) {
+            if (dataHoje.getDayOfWeek().getValue() < 6) {
+                dias--;
+            }
+            dataHoje = dataHoje.plusDays(1);
+        }
     }
 }
